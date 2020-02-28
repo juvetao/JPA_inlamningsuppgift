@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ingredient_id")
     private int ingredientId;
     @Column(unique = true)
     private String ingredientName;

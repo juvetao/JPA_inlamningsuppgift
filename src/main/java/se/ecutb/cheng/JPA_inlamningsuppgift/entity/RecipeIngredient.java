@@ -2,9 +2,8 @@ package se.ecutb.cheng.JPA_inlamningsuppgift.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class RecipeIngredient {
@@ -15,8 +14,21 @@ public class RecipeIngredient {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     private String recipeIngredientId;
-    //private Ingredient ingredient;
+
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
+    )
+    @JoinColumn(name = "ingredient_id")
+    private Ingredient ingredient;
+
     private double amount;
     private Measurement measurement;
-    //private Recipe recipe;
+
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
+    )
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe;
 }
