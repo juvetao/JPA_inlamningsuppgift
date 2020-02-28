@@ -2,10 +2,7 @@ package se.ecutb.cheng.JPA_inlamningsuppgift.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class RecipeInstruction {
@@ -15,6 +12,7 @@ public class RecipeInstruction {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
+    @Column(name = "instruction_id")
     private String instructionId;
     private String instructions;
 }

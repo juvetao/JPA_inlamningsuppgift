@@ -25,6 +25,7 @@ public class Recipe {
             fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
     )
+    @JoinColumn(name = "instruction_id")
     private RecipeInstruction instruction;
 
     @ManyToMany(
