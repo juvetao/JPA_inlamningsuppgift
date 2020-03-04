@@ -1,4 +1,4 @@
-package se.ecutb.cheng.JPA_inlamningsuppgift.repositories;
+package se.ecutb.cheng.JPA_inlamningsuppgift.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ public class IngredientRepositoryTest {
 
     @BeforeEach
     void setUp(){
-        List<Ingredient> presisted = data().stream()
+        List<Ingredient> persisted = data().stream()
                 .map(testObject::save)
                 .collect(Collectors.toList());
         em.flush();

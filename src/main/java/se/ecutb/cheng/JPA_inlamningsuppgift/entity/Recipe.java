@@ -3,6 +3,7 @@ package se.ecutb.cheng.JPA_inlamningsuppgift.entity;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -90,6 +91,42 @@ public class Recipe {
         this.categories = categories;
     }
 
+    public boolean addRecipeIngredient(RecipeIngredient recipeIngredient) {
+        if(recipeIngredients == null) recipeIngredients = new ArrayList<>();
+        if(recipeIngredient == null) return false;
+        for(RecipeIngredient ingredient: recipeIngredients ){
+            if(recipeIngredient == ingredient){
+                return false;
+            }
+        }
+        recipeIngredients.add(recipeIngredient);
+        return true;
+    }
+
+    public boolean removeRecipeIngredient(RecipeIngredient recipeIngredient){
+        if(recipeIngredient == null) recipeIngredients = new ArrayList<>();
+        if(recipeIngredient == null) return false;
+        return recipeIngredients.remove(recipeIngredient);
+    }
+
+    public boolean addCategory(RecipeCategory category) {
+        if(categories == null) categories = new ArrayList<>();
+        if(category == null) return false;
+        for (RecipeCategory cate : categories){
+            if(category == cate){
+                return false;
+            }
+        }
+        categories.add(category);
+        return true;
+    }
+
+    public boolean removeCategory(RecipeCategory category){
+        if(categories == null) categories = new ArrayList<>();
+        if(category == null) return false;
+        return categories.remove(category);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,4 +153,7 @@ public class Recipe {
         sb.append('}');
         return sb.toString();
     }
+
+
+
 }

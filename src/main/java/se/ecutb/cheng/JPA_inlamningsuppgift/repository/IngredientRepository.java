@@ -1,4 +1,4 @@
-package se.ecutb.cheng.JPA_inlamningsuppgift.repositories;
+package se.ecutb.cheng.JPA_inlamningsuppgift.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import se.ecutb.cheng.JPA_inlamningsuppgift.entity.Ingredient;
