@@ -1,6 +1,7 @@
 package se.ecutb.cheng.JPA_inlamningsuppgift.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class RecipeCategory {
     private int categoryId;
     private String category;
     @ManyToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
     )
     @JoinTable(
@@ -51,6 +52,22 @@ public class RecipeCategory {
 
     public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
+    }
+
+    public boolean addRecipe(Recipe recipe) {
+        if(recipes == null) recipes = new ArrayList<>();
+        if (recipe == null) return false;
+        if (recipes.contains(recipe)) return false;
+
+        recipes.add(recipe);
+        return true;
+    }
+
+    public boolean removeRecipe (Recipe recipe){
+        if (recipe == null) return false;
+        if (!recipes.contains(recipe)) return false;
+
+        return recipes.remove(recipe);
     }
 
     @Override

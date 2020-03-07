@@ -1,13 +1,12 @@
 package se.ecutb.cheng.JPA_inlamningsuppgift.entity;
-
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class RecipeIngredient {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -15,35 +14,32 @@ public class RecipeIngredient {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     private String recipeIngredientId;
-
     @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.PERSIST,CascadeType.REFRESH}
     )
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
-
     private double amount;
     private Measurement measurement;
-
     @ManyToOne(
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
+            cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}
     )
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    public RecipeIngredient(String recipeIngredientId, Ingredient ingredient, double amount, Measurement measurement, Recipe recipe) {
-        this.recipeIngredientId = recipeIngredientId;
+    public RecipeIngredient(Ingredient ingredient, double amount, Measurement measurement) {
         this.ingredient = ingredient;
         this.amount = amount;
         this.measurement = measurement;
-        this.recipe = recipe;
     }
 
-    public RecipeIngredient(double amount, Measurement measurement) {
-        this(null , null,  amount, measurement, null);
+
+    public RecipeIngredient(Ingredient ingredient){
+        this(ingredient,0,null);
     }
+
 
     RecipeIngredient(){}
 
@@ -90,12 +86,13 @@ public class RecipeIngredient {
         RecipeIngredient that = (RecipeIngredient) o;
         return Double.compare(that.amount, amount) == 0 &&
                 Objects.equals(recipeIngredientId, that.recipeIngredientId) &&
+                Objects.equals(ingredient, that.ingredient) &&
                 measurement == that.measurement;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeIngredientId, amount, measurement);
+        return Objects.hash(recipeIngredientId, ingredient, amount, measurement);
     }
 
     @Override
@@ -103,9 +100,8 @@ public class RecipeIngredient {
         final StringBuilder sb = new StringBuilder("RecipeIngredient{");
         sb.append("recipeIngredientId='").append(recipeIngredientId).append('\'');
         sb.append(", ingredient=").append(ingredient);
-        sb.append(", amount=").append(amount);
+        sb.append(", measurementAmount=").append(amount);
         sb.append(", measurement=").append(measurement);
-        sb.append(", recipe=").append(recipe);
         sb.append('}');
         return sb.toString();
     }

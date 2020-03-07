@@ -1,10 +1,10 @@
 package se.ecutb.cheng.JPA_inlamningsuppgift.repository;
 
-import org.springframework.data.jpa.repository.Query;
+//import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+//import org.springframework.data.repository.query.Param;
 import se.ecutb.cheng.JPA_inlamningsuppgift.entity.Recipe;
-import se.ecutb.cheng.JPA_inlamningsuppgift.entity.RecipeCategory;
+//import se.ecutb.cheng.JPA_inlamningsuppgift.entity.RecipeCategory;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +20,5 @@ public interface RecipeRepository extends CrudRepository<Recipe, Integer> {
     List<Recipe> findByCategoriesCategoryIgnoreCase (String category);
 
     //Hitta alla recept som har en eller flera träffar från en samling kategorier
-    //@Query("SELECT DISTINCT recipe FROM Recipe recipe JOIN FETCH recipe.categories categories WHERE categories.category IN category")
-    List<Recipe> findDistinctRecipeByCategoriesCategoryIn (List<String> category);
+    List<Recipe> findRecipeByCategoriesCategoryIn (List<String> category);
 }

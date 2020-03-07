@@ -1,7 +1,4 @@
 package se.ecutb.cheng.JPA_inlamningsuppgift.entity;
-
-
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,49 +8,81 @@ import java.util.Objects;
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipe_id")
     private int recipeId;
     private String recipeName;
-
     @OneToMany(
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
+            cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.PERSIST},
             orphanRemoval = true,
             mappedBy = "recipe"
     )
-    private List<RecipeIngredient> recipeIngredients;
-
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
     @OneToOne(
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
+            cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.PERSIST}
     )
     @JoinColumn(name = "instruction_id")
     private RecipeInstruction instruction;
-
     @ManyToMany(
-            fetch = FetchType.EAGER,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST}
+            cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH,CascadeType.PERSIST},
+            fetch = FetchType.LAZY
     )
     @JoinTable(
             name = "recipe_recipe_category",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_category_id")
     )
-    private List<RecipeCategory> categories;
+    private List<RecipeCategory> categories = new ArrayList<>();
 
-    public Recipe(int recipeId, String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction instruction, List<RecipeCategory> categories) {
-        this.recipeId = recipeId;
+    public Recipe(String recipeName, List<RecipeIngredient> recipeIngredients, RecipeInstruction instruction, List<RecipeCategory> categories) {
         this.recipeName = recipeName;
         this.recipeIngredients = recipeIngredients;
         this.instruction = instruction;
         this.categories = categories;
     }
 
+    public Recipe(int recipeId, String recipeName, RecipeInstruction instruction) {
+        this.recipeId = recipeId;
+        this.recipeName = recipeName;
+        this.instruction = instruction;
+    }
+
     public Recipe(String recipeName, RecipeInstruction instruction) {
-        this(0, recipeName, null, instruction, null);
+        this(0,recipeName, instruction);
+    }
+
+    public Recipe(String recipeName) {
+        this(0,recipeName,null);
     }
 
     Recipe(){}
+
+    public boolean addCategory(RecipeCategory recipeCategory){
+        if (categories.contains(recipeCategory)) return false;
+        if (recipeCategory == null) return false;
+        return categories.add(recipeCategory);
+    }
+
+    public boolean removeCategory(RecipeCategory recipeCategory){
+        if (!categories.contains(recipeCategory)) return false;
+        if (recipeCategory == null) return false;
+        return categories.remove(recipeCategory);
+    }
+
+    public boolean addRecipeIngredient(RecipeIngredient recipeIngredient){
+        if (recipeIngredient == null) return false;
+        if (recipeIngredient.getRecipe() != null) return false;
+        if (recipeIngredients.contains(recipeIngredient)) return false;
+        recipeIngredient.setRecipe(this);
+        return recipeIngredients.add(recipeIngredient);
+    }
+
+    public boolean removeRecipeIngredient(RecipeIngredient recipeIngredient){
+        if (recipeIngredient == null) return false;
+        if (recipeIngredient.getRecipe() != this) return false;
+        recipeIngredient.setRecipe(null);
+        return recipeIngredients.remove(recipeIngredient);
+    }
 
     public int getRecipeId() {
         return recipeId;
@@ -91,50 +120,13 @@ public class Recipe {
         this.categories = categories;
     }
 
-    public boolean addRecipeIngredient(RecipeIngredient recipeIngredient) {
-        if(recipeIngredients == null) recipeIngredients = new ArrayList<>();
-        if(recipeIngredient == null) return false;
-        for(RecipeIngredient ingredient: recipeIngredients ){
-            if(recipeIngredient == ingredient){
-                return false;
-            }
-        }
-        recipeIngredients.add(recipeIngredient);
-        return true;
-    }
-
-    public boolean removeRecipeIngredient(RecipeIngredient recipeIngredient){
-        if(recipeIngredient == null) recipeIngredients = new ArrayList<>();
-        if(recipeIngredient == null) return false;
-        return recipeIngredients.remove(recipeIngredient);
-    }
-
-    public boolean addCategory(RecipeCategory category) {
-        if(categories == null) categories = new ArrayList<>();
-        if(category == null) return false;
-        for (RecipeCategory cate : categories){
-            if(category == cate){
-                return false;
-            }
-        }
-        categories.add(category);
-        return true;
-    }
-
-    public boolean removeCategory(RecipeCategory category){
-        if(categories == null) categories = new ArrayList<>();
-        if(category == null) return false;
-        return categories.remove(category);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
         return recipeId == recipe.recipeId &&
-                Objects.equals(recipeName, recipe.recipeName) &&
-                Objects.equals(instruction, recipe.instruction);
+                Objects.equals(recipeName, recipe.recipeName);
     }
 
     @Override
@@ -147,13 +139,10 @@ public class Recipe {
         final StringBuilder sb = new StringBuilder("Recipe{");
         sb.append("recipeId=").append(recipeId);
         sb.append(", recipeName='").append(recipeName).append('\'');
-        sb.append(", recipeIngredients=").append(recipeIngredients);
-        sb.append(", instruction=").append(instruction);
-        sb.append(", categories=").append(categories);
+        sb.append(", recipeIngredientList=").append(recipeIngredients);
+        sb.append(", recipeInstruction=").append(instruction);
+        sb.append(", recipeCategoryList=").append(categories);
         sb.append('}');
         return sb.toString();
     }
-
-
-
 }
